@@ -22,6 +22,11 @@ calc = (url)->
   lst = Stat.data[url]
   if not lst
     return 0
+
+  [d, other] = url.split '://'
+  if d not in ['http', 'https']
+    return 0
+
   n = Math.floor (lst.length / 2)
   res = 0
   for i in [0..n]
