@@ -9,10 +9,15 @@ Stat =
   data: {}
   cur: null
 
+chrome.storage.sync.get ("stcksf") , (data)->
+  console.log data
+
 tabChanged = (url) ->
   if Stat.cur
     lst = Stat.data[Stat.cur]
     lst.push(new Date())
+
+  console.log Stat.data
 
   [d, other] = url.split '://'
   [domain, oth] = other.split '/'
@@ -21,6 +26,7 @@ tabChanged = (url) ->
   Stat.cur = urlN
   lst = Stat.data[urlN] or []
   lst.push(new Date())
+  chrome.storage.sync.set("stcksf": JSON.stringify(Stat.data))
   Stat.data[urlN] = lst
 
 calc = (url)->
@@ -71,21 +77,18 @@ updateBadge = (url)->
 
 
 chrome.tabs.onActivated.addListener (activeInfo)->
-  console.log "Select #{activeInfo.tabId} "
   Stat.curTabId = activeInfo.tabId
   chrome.tabs.get activeInfo.tabId, (tab) ->
     tabChanged(tab.url) if tab.url
     updateBadge tab.url
 
 chrome.alarms.onAlarm.addListener (alarm)->
-  console.log alarm, Stat.curTabId
+  Stat.curTabId
   if alarm.name == "update"
     if not Stat.curTabId
       return
     chrome.tabs.get Stat.curTabId, (tab)->
-      console.log tab
       if tab.url
         updateBadge tab.url
 
 chrome.alarms.create("update", {periodInMinutes: 0.001})
-console.log('\'Allo \'Allo! Event Page for Browser Action')
