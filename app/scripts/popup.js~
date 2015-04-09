@@ -1,0 +1,8 @@
+(function() {
+  'use strict';
+  console.log('\'Allo \'Allo! Popup');
+  chrome.browserAction.getBadgeText({}, function(result) {
+    window.alert('Badge text = ' + result);
+  });
+
+}).call(this);
