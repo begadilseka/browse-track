@@ -66,6 +66,7 @@ updateBadge = (url)->
     '0'+ss
   else
     ss
+
   chrome.browserAction.setBadgeText({text: "#{HH}:#{MM}:#{SS}"})
 
 
